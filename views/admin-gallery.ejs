@@ -1,0 +1,27 @@
+<section class="panel gallery-add">
+  <form class="gallery-photo-upload" data-api-form data-dirty action="/api/admin/gallery" data-method="POST" data-reload enctype="multipart/form-data">
+    <div class="form-feedback" role="alert" hidden></div>
+    <div class="photo-panel">
+      <div class="upload-preview small"><img data-preview hidden alt="Preview foto galeri"><span data-preview-empty><%- include('icon',{name:'image'}) %></span></div>
+      <label for="gallery-image" class="upload-label">Pilih Foto</label>
+      <input id="gallery-image" type="file" name="image" accept="image/jpeg,image/png,image/webp" required data-photo>
+      <span class="field-error" data-error="image"></span>
+    </div>
+    <button class="button primary" type="submit">Tambah Foto</button>
+  </form>
+</section>
+<div class="admin-gallery-grid"><% gallery.forEach((g,i)=>{ %>
+  <section class="panel" data-gallery-id="<%= g.id %>">
+    <form data-api-form data-dirty action="/api/admin/gallery/<%= g.id %>" data-method="PUT" data-reload enctype="multipart/form-data">
+      <div class="form-feedback" role="alert" hidden></div>
+      <div class="upload-preview"><img data-preview src="/media/<%= g.image_asset_id %>" alt="<%= g.alt_text %>"></div>
+      <label class="upload-label" for="g-photo-<%= g.id %>">Ganti Foto</label>
+      <input id="g-photo-<%= g.id %>" type="file" name="image" accept="image/jpeg,image/png,image/webp" data-photo>
+      <span class="field-error" data-error="image"></span>
+      <div class="field"><label for="g-published-<%= g.id %>">Publikasi</label><select id="g-published-<%= g.id %>" name="is_published"><option value="1" <%= g.is_published?'selected':'' %>>Terbit</option><option value="0" <%= !g.is_published?'selected':'' %>>Tersembunyi</option></select></div>
+      <div class="row-actions"><button class="mini-button" type="submit">Simpan</button><button class="mini-button danger" type="button" data-delete="/api/admin/gallery/<%= g.id %>" data-name="foto galeri <%= i+1 %>">Hapus</button></div>
+    </form>
+    <div class="gallery-order"><button class="mini-button" data-move="/api/admin/gallery/<%= g.id %>/move" data-direction="up" <%= i===0?'disabled':'' %>>Naik</button><button class="mini-button" data-move="/api/admin/gallery/<%= g.id %>/move" data-direction="down" <%= i===gallery.length-1?'disabled':'' %>>Turun</button></div>
+  </section>
+<% }) %></div>
+<% if(!gallery.length){ %><div class="panel empty-state"><h3>Belum ada foto</h3></div><% } %>

@@ -1,0 +1,13 @@
+<form class="filters catalog-filters" method="get" action="<%= currentPath %>" data-filters>
+  <div class="filter-search">
+    <label for="search"><span data-i18n="searchLabel">Cari nama barang</span></label>
+    <div class="search-field catalog-search">
+    <input id="search" type="search" name="q" value="<%= filters.q %>" placeholder="Cari nama suku cadang&#8230;" data-i18n-placeholder="searchPlaceholder" maxlength="150">
+    <button class="catalog-search-button filter-submit" type="submit" aria-label="Cari produk" data-i18n-aria="searchProducts"><%- include('icon',{name:'search'}) %></button>
+    </div>
+  </div>
+  <div class="filter-select"><label for="category"><span data-i18n="category">Kategori</span></label><select id="category" name="category" data-custom-select><option value="" data-i18n="allCategories">Semua kategori</option><% categories.forEach(c=>{ %><option translate="no" value="<%= c.slug %>" <%= filters.category===c.slug?'selected':'' %>><%= c.name %></option><% }) %></select></div>
+  <div class="filter-select"><label for="status">Publikasi</label><select id="status" name="status" data-custom-select><option value="">Semua status</option><option value="draft" <%= filters.status==='draft'?'selected':'' %>>Draft</option><option value="published" <%= filters.status==='published'?'selected':'' %>>Published</option></select></div>
+  <div class="filter-select"><label for="sort"><span data-i18n="sort">Urutkan</span></label><select id="sort" name="sort" data-custom-select><option value="newest" <%= filters.sort==='newest'?'selected':'' %> data-i18n="newest">Terbaru</option><option value="price-low" <%= filters.sort==='price-low'?'selected':'' %> data-i18n="lowPrice">Harga Terendah</option><option value="price-high" <%= filters.sort==='price-high'?'selected':'' %> data-i18n="highPrice">Harga Tertinggi</option></select></div>
+  
+</form>

@@ -1,0 +1,25 @@
+/* Compact availability tablets using the TractorPart brand palette. */
+.public-body .badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 3px 8px;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.public-body .badge.available {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.public-body .badge.unavailable {
+  color: #fff;
+  background: var(--red);
+  border-color: var(--red);
+}
+.public-body .product-image > .badge { top: 12px; left: 12px; }
+.public-body .product-image > .badge span { font-size: inherit; }

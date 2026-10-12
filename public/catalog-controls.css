@@ -1,0 +1,154 @@
+:is(.public-body,.admin-body) .catalog-filters {
+  --catalog-control-height: 48px;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) 210px 170px 185px;
+  align-items: end;
+  gap: 16px;
+  padding-bottom: 28px;
+}
+.filter-search { min-width: 0; }
+:is(.public-body,.admin-body) .catalog-search {
+  height: var(--catalog-control-height);
+  border: 1px solid #e5e7eb;
+  border-radius: 999px;
+  background: #fff;
+  padding: 3px 3px 3px 14px;
+  box-shadow: 0 6px 24px #1717170b;
+  min-width: 0;
+}
+:is(.public-body,.admin-body) .catalog-search input[type="search"] {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0 8px 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  box-shadow: none;
+}
+:is(.public-body,.admin-body) .catalog-search input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
+.catalog-search:focus-within { border-color: var(--blue); }
+.catalog-search-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border: 0;
+  border-radius: 50%;
+  padding: 0;
+  background: var(--red);
+  color: #fff;
+  box-shadow: 0 4px 12px #d90b1726;
+}
+.catalog-search-button:hover { background: var(--red-hover); }
+.catalog-search-button .action-icon,
+.catalog-search-button .action-icon svg { width: 20px; height: 20px; }
+:is(.public-body,.admin-body) .catalog-filters .filter-select { min-width: 0; padding: 0; border: 0; }
+:is(.public-body,.admin-body) .catalog-filters .filter-select > label,
+:is(.public-body,.admin-body) .catalog-filters .filter-search > label {
+  display: block;
+  margin: 0 14px 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+}
+:is(.public-body,.admin-body) .catalog-filters .select-trigger,
+:is(.public-body,.admin-body) .catalog-filters [data-custom-select] {
+  height: var(--catalog-control-height);
+  min-height: var(--catalog-control-height);
+  font-size: 14px;
+  line-height: 20px;
+}
+:is(.public-body,.admin-body) .catalog-filters select,
+.page-size-form select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #dedfe3;
+  border-radius: 13px;
+  background: #fff;
+  font-size: 13px;
+}
+.custom-select { position: relative; min-width: 0; }
+.custom-select select[hidden], .page-size-submit[hidden], .select-options[hidden] { display: none !important; }
+.select-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 14px;
+  border: 1px solid #dedfe3;
+  border-radius: 13px;
+  background: #fff;
+  color: var(--text);
+  text-align: left;
+  font-size: 13px;
+}
+.select-trigger[aria-expanded="true"], .select-trigger:focus-visible {
+  border-color: var(--blue);
+  outline: 3px solid #0b349a16;
+  outline-offset: 2px;
+}
+.select-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.select-chevron { display: inline-flex; flex: none; transition: transform 150ms var(--dropdown-ease); }
+.select-trigger[aria-expanded="true"] .select-chevron { transform: rotate(180deg); }
+.select-options {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 40;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(320px, calc(100vw - 36px));
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid #e4e6ec;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 12px 30px #17171712;
+}
+.is-upward .select-options { top: auto; bottom: calc(100% + 8px); }
+.select-option { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 9px 12px; border-radius: 9px; cursor: pointer; font-size: 13px; }
+.select-option[aria-selected="true"], .select-option.is-highlighted { background: #eef2fb; color: var(--blue); }
+.select-check { display: inline-flex; visibility: hidden; flex: none; }
+.select-option[aria-selected="true"] .select-check { visibility: visible; }
+.public-body .catalog-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 20px; font-size: 13px; margin-top: 48px; }
+.pagination-numbers { display: flex; align-items: center; gap: 2px; }
+.page-number, .page-step { position: relative; isolation: isolate; display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 50%; }
+.page-number:hover, a.page-step:hover { background: #f4f5f8; color: var(--blue); }
+.page-number.current { color: var(--blue); }
+.page-number.current::before { content: ''; position: absolute; width: 32px; height: 32px; z-index: -1; border: 1px solid var(--blue); border-radius: 50%; background: #eaf0ff; }
+.page-step[aria-disabled="true"] { color: #9ca3af; }
+.page-ellipsis { display: inline-flex; justify-content: center; width: 26px; color: var(--muted); }
+.page-size-form { display: flex; align-items: center; gap: 8px; }
+.page-size-form .custom-select { min-width: 136px; }
+.page-size-form .select-trigger, .page-size-form select { border-radius: 999px; min-height: 44px; }
+.page-size-form .select-options { left: auto; right: 0; }
+@media (max-width: 1100px) {
+  :is(.public-body,.admin-body) .catalog-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  :is(.public-body,.admin-body) .filter-search { grid-column: 1 / -1; }
+}
+@media (max-width: 639px) {
+  :is(.public-body,.admin-body) .catalog-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 12px; }
+  :is(.public-body,.admin-body) .catalog-filters .filter-select:has(#sort) { grid-column: 1 / -1; }
+  .public-body .catalog-pagination { gap: 16px 8px; }
+  .pagination-numbers { gap: 0; max-width: 100%; }
+  .page-number, .page-step { width: 36px; height: 44px; }
+  .page-ellipsis { width: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .select-chevron { transition: none; } }

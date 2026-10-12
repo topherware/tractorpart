@@ -1,0 +1,46 @@
+{
+  "name": "tractorpart",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "node --env-file-if-exists=.env --watch server.js",
+    "start": "node --env-file-if-exists=.env server.js",
+    "admin:create": "node --env-file-if-exists=.env scripts/admin.js",
+    "seed:demo": "node --env-file-if-exists=.env scripts/seed.js",
+    "demo:clear": "node --env-file-if-exists=.env scripts/clear-demo.js",
+    "assets": "node scripts/assets.js",
+    "backup": "node --env-file-if-exists=.env scripts/backup.js",
+    "restore": "node --env-file-if-exists=.env scripts/restore.js",
+    "media:cleanup": "node --env-file-if-exists=.env scripts/cleanup.js",
+    "test": "node --test --test-concurrency=1 tests/acceptance.test.js",
+    "test:browser": "node tests/browser.js",
+    "test:catalog": "node tests/catalog-controls.browser.js",
+    "check": "node scripts/check.js",
+    "build": "node scripts/build-web.js && npm run check",
+    "cloud:check": "node --env-file-if-exists=.env scripts/cloud-check.js",
+    "data:import": "node --env-file-if-exists=.env scripts/import-sqlite.js",
+    "test:cloud": "node --test --test-concurrency=1 tests/cloud.test.js",
+    "media:backup": "node --env-file-if-exists=.env scripts/export-media.js",
+    "test:upload": "node tests/upload.browser.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "multer": "^2.0.2",
+    "pg": "^8.23.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@electric-sql/pglite": "^0.5.9",
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/outfit": "^5.3.0",
+    "@playwright/test": "^1.56.0",
+    "esbuild": "^0.28.2"
+  }
+}

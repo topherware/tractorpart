@@ -1,0 +1,22 @@
+<% if(currentPath.startsWith('/admin')){ %><%- include('admin-pagination',{pageNumber}) %><% }else{ %>
+<% const start=pages<=7?1:pageNumber<=4?1:pageNumber>=pages-3?pages-4:pageNumber-1; const end=pages<=7?pages:pageNumber<=4?5:pageNumber>=pages-3?pages:pageNumber+1; const visible=[...new Set([1,...Array.from({length:end-start+1},(_,i)=>start+i),pages])].sort((a,b)=>a-b); %>
+<nav class="pagination catalog-pagination" aria-label="Halaman katalog" data-i18n-aria="catalogPages">
+  <div class="pagination-numbers">
+    <% if(pageNumber>1){ %><a class="page-step" href="<%= pageUrl(pageNumber-1) %>" aria-label="Sebelumnya" data-i18n-aria="previousPage"><% }else{ %><span class="page-step" role="link" aria-disabled="true" aria-label="Sebelumnya" data-i18n-aria="previousPage"><% } %>
+      <%- include('arrow',{direction:'left'}) %>
+    <% if(pageNumber>1){ %></a><% }else{ %></span><% } %>
+    <% visible.forEach((number,i)=>{ const previous=visible[i-1]; if(i&&number-previous>1){ if(number-previous===2){ %><a class="page-number" href="<%= pageUrl(previous+1) %>"><%= previous+1 %></a><% }else{ %><span class="page-ellipsis" aria-hidden="true">&hellip;</span><% }} %>
+      <% if(number===pageNumber){ %><span class="page-number current" aria-current="page"><%= number %></span><% }else{ %><a class="page-number" href="<%= pageUrl(number) %>"><%= number %></a><% } %>
+    <% }) %>
+    <% if(pageNumber<pages){ %><a class="page-step" href="<%= pageUrl(pageNumber+1) %>" aria-label="Berikutnya" data-i18n-aria="nextPage"><% }else{ %><span class="page-step" role="link" aria-disabled="true" aria-label="Berikutnya" data-i18n-aria="nextPage"><% } %>
+      <%- include('arrow',{direction:'right'}) %>
+    <% if(pageNumber<pages){ %></a><% }else{ %></span><% } %>
+  </div>
+  <form class="page-size-form" method="get" action="/products" data-page-size>
+    <% for(const key of ['q','category','availability','sort']){if(filters[key]){ %><input type="hidden" name="<%= key %>" value="<%= filters[key] %>"><% }} %>
+    <label for="per-page" class="sr-only" data-i18n="resultsPerPage">Hasil per halaman</label>
+    <select id="per-page" name="per_page" data-custom-select><% for(const size of [10,20,50,100]){ %><option value="<%= size %>" <%= perPage===size?'selected':'' %> data-i18n="perPage<%= size %>"><%= size %> / halaman</option><% } %></select>
+    <button class="button page-size-submit" type="submit" data-i18n="apply">Terapkan</button>
+  </form>
+</nav>
+<% } %>

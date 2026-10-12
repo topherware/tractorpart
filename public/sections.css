@@ -1,0 +1,56 @@
+/* Public section introductions share a centered title and subtitle rhythm. */
+.public-body .section-heading,
+.public-body .catalog-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.public-body .section-heading > div,
+.public-body .catalog-heading > div { max-width: 800px; }
+.public-body .section-heading h1,
+.public-body .section-heading h2,
+.public-body .catalog-heading h1 { margin: 0; }
+.public-body .section-heading .eyebrow,
+.public-body .catalog-heading .eyebrow { display: inline-block; margin-bottom: 12px; }
+.public-body .section-heading > p,
+.public-body .catalog-heading > p {
+  max-width: 680px;
+  margin: 0;
+  padding: 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.public-body .section-heading > .text-link { max-width: none; font-size: 13px; }
+.public-body .about-strip-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.public-body .about-strip-inner > div { width: 100%; max-width: 760px; }
+.public-body .about-strip-inner p { margin: 0 0 18px; }
+.public-body .contact-strip {
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.public-body .contact-strip > div { max-width: 760px; }
+.public-body .about-strip .about-layout { text-align: center; align-items: center; }
+.public-body .about-strip .about-layout > div:first-child { display: flex; flex-direction: column; align-items: center; }
+.public-body .about-strip .about-layout .body-copy { margin-bottom: 0; }
+.public-body .about-strip .about-layout .button { align-self: center; margin-top: 24px; }
+.public-body .about-strip .body-copy { font-size: 16px; }
+.action-icon { display: inline-flex; align-items: center; flex: none; width: 18px; height: 18px; }
+.action-icon svg { display: block; width: 18px; height: 18px; }
+@media (max-width: 639px) {
+  .public-body .section-heading,
+  .public-body .catalog-heading { gap: 12px; margin-bottom: 28px; }
+  .public-body .section-heading > p,
+  .public-body .catalog-heading > p { font-size: 13px; }
+}

@@ -1,0 +1,10 @@
+node_modules/
+.env*
+!.env.example
+.vercel/
+data/
+backups/
+test-output/
+*.log
+.npm-cache/
+data.before-restore-*/

@@ -1,0 +1,4 @@
+if(process.env.DATABASE_URL||process.env.VERCEL)throw new Error('Perintah ini hanya untuk data SQLite lokal.');
+import fs from 'node:fs/promises';import path from 'node:path';import { db,dataDir,all,run,transaction } from '../lib/db.js';import { cleanupAsset } from '../lib/media.js';
+if(!process.argv.includes('--confirm')){console.error('Jalankan npm run demo:clear -- --confirm untuk menghapus hanya produk bertanda [Dummy]. Buat backup terlebih dahulu.');db.close();process.exit(1);}
+const products=all("SELECT id,image_asset_id FROM products WHERE name LIKE '%[Dummy]'");transaction(()=>{for(const p of products)run('DELETE FROM products WHERE id=?',p.id);});for(const p of products)await cleanupAsset(p.image_asset_id);await fs.unlink(path.join(dataDir,'DEMO')).catch(e=>{if(e.code!=='ENOENT')throw e;});console.log(`${products.length} produk dummy dihapus. Kategori dan konten toko dipertahankan.`);db.close();

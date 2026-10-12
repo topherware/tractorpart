@@ -1,0 +1,16 @@
+.env*
+!.env.example
+.git
+.agents
+.codex
+node_modules
+.npm-cache
+data
+backups
+data.before-restore-*
+test-output
+tests
+docs
+assets
+ref-*.png
+*.log

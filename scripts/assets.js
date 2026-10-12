@@ -1,0 +1,10 @@
+import fs from 'node:fs/promises';
+import sharp from 'sharp';
+await fs.mkdir('public/images',{recursive:true});await fs.mkdir('public/fonts',{recursive:true});
+await sharp('assets/logo.png').resize({width:768,withoutEnlargement:true}).png({compressionLevel:9}).toFile('public/images/logo.png');
+await sharp('assets/tractorpart-hero.png').webp({quality:86}).toFile('public/images/tractorpart-hero.webp');
+const favicon=await sharp('assets/favicon.png').resize(64,64,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}).ensureAlpha().png().toBuffer();
+const faviconMask=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" rx="12" fill="white"/></svg>');
+await sharp(favicon).composite([{input:faviconMask,blend:'dest-in'}]).png().toFile('public/favicon.png');
+for(const [pkg,font,weights]of[['outfit','outfit',[500,600]],['dm-sans','dm-sans',[400,500,700]]])for(const w of weights)await fs.copyFile(`node_modules/@fontsource/${pkg}/files/${font}-latin-${w}-normal.woff2`,`public/fonts/${font}-latin-${w}-normal.woff2`);
+console.log('Hero WebP, logo PNG yang dioptimalkan, favicon, dan font lokal siap.');

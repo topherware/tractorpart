@@ -1,0 +1,12 @@
+<dialog id="mobile-menu" class="mobile-menu" aria-label="Navigasi utama" data-i18n-aria="navigation">
+  <div class="mobile-menu-content">
+    <div class="mobile-menu-heading">
+      <a class="brand" href="/" aria-label="TractorPart Home"><img src="/static/images/logo.png" width="2172" height="724" alt="TractorPart"></a>
+      <button class="mobile-menu-close" type="button" data-menu-close aria-label="Tutup menu navigasi" data-i18n-aria="closeMenu" autofocus><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="mobile-menu-navigation" data-mobile-navigation></div>
+    <% if(contact.links.length){ %><div class="mobile-menu-socials"><% for(const link of contact.links){ %><a href="<%= link.url %>" target="_blank" rel="noopener noreferrer" translate="no"><%= link.name %></a><% } %></div><% } %>
+    <a class="button primary mobile-menu-contact" href="<%= whatsapp(contact) %>"><span data-i18n="contactUs">Hubungi Kami</span><%- include('icon',{name:'phone'}) %></a>
+  </div>
+  <div class="mobile-menu-wipe" aria-hidden="true"><div class="mobile-menu-layer"></div><div class="mobile-menu-layer"></div><div class="mobile-menu-layer"></div><img src="/static/images/logo.png" width="2172" height="724" alt=""></div>
+</dialog>

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "express",
+  "regions": ["sin1"],
+  "installCommand": "npm ci --include=dev",
+  "buildCommand": "npm run build",
+  "functions": {
+    "server.js": { "includeFiles": "views/**", "maxDuration": 60 }
+  },
+  "rewrites": [
+    { "source": "/static/:path*", "destination": "/:path*" }
+  ]
+}
