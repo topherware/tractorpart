@@ -67,6 +67,8 @@ Database Supabase baru berisi placeholder profil/kontak, tanpa produk dummy. Nom
 
 Foto asli maksimal 5 MB. Browser mengoptimalkan foto besar sebelum upload untuk memenuhi batas request Vercel 4,5 MB. Server tetap memvalidasi dan mengubah foto ke WebP maksimal 1.400 px.
 
+Upload foto produk dan galeri membuka editor crop persegi: geser, zoom, pinch mobile, Foto Utuh, dan Isi Bingkai. Pilih Gunakan Foto sebelum menyimpan. Crop dapat diatur ulang dari foto asli selama form masih terbuka.
+
 ## Pengujian
 
 ```powershell
@@ -76,6 +78,7 @@ npm run test:cloud
 npm run test:browser
 npm run test:catalog
 npm run test:upload
+npm run test:crop
 ```
 
 Tes memakai database/foto terisolasi; tidak mengubah data toko. `test:cloud` memakai mesin PostgreSQL PGlite dengan simulasi HTTP Storage, sehingga menguji SQL PostgreSQL dan transaksi tanpa kredensial cloud. Koneksi layanan nyata diperiksa dengan `cloud:check` setelah env tersedia. Chrome terpasang digunakan untuk browser; alternatif set `PLAYWRIGHT_CHROMIUM_EXECUTABLE`.

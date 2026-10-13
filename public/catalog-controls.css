@@ -35,7 +35,7 @@
   box-shadow: none;
 }
 :is(.public-body,.admin-body) .catalog-search input[type="search"]::-webkit-search-decoration { -webkit-appearance: none; }
-.catalog-search:focus-within { border-color: var(--blue); }
+.catalog-search:focus-within { border-color: var(--red); }
 .catalog-search-button {
   display: inline-flex;
   align-items: center;
@@ -99,8 +99,8 @@
   font-size: 13px;
 }
 .select-trigger[aria-expanded="true"], .select-trigger:focus-visible {
-  border-color: var(--blue);
-  outline: 3px solid #0b349a16;
+  border-color: var(--red);
+  outline: none;
   outline-offset: 2px;
 }
 .select-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

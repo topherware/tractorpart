@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id">
+<html lang="id" data-input-mode="pointer">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <title><%= title %> · TractorPart</title><meta name="description" content="<%= description %>">
@@ -40,4 +40,5 @@
 <dialog id="confirm-dialog" class="dialog"><form method="dialog"><span class="eyebrow">KONFIRMASI</span><h2>Hapus item?</h2><p id="confirm-message"></p><div class="form-actions"><button class="button" value="cancel">Batal</button><button class="button primary" value="confirm">Hapus</button></div></form></dialog>
 <dialog id="category-dialog" class="dialog"><button class="dialog-close" data-close-dialog aria-label="Tutup dialog">×</button><span class="eyebrow">KATEGORI BARU</span><h2>Tambah Kategori</h2><form data-category-modal><div class="form-feedback" role="alert" hidden></div><label for="modal-category-name">Nama kategori</label><input id="modal-category-name" name="name" minlength="2" maxlength="80" required><span class="field-error" data-error="name"></span><button class="button primary" type="submit">Simpan Kategori</button></form></dialog>
 <dialog id="lightbox" class="lightbox" aria-label="Foto galeri" data-i18n-aria="galleryPhoto"><button class="lightbox-close" data-lightbox-close aria-label="Tutup galeri" data-i18n-aria="closeGallery">×</button><button class="lightbox-prev" data-lightbox-prev aria-label="Foto sebelumnya" data-i18n-aria="prevPhoto"><%- include('arrow',{direction:'left'}) %></button><figure><img id="lightbox-image" alt=""><figcaption><span id="lightbox-counter"></span></figcaption></figure><button class="lightbox-next" data-lightbox-next aria-label="Foto berikutnya" data-i18n-aria="nextPhoto"><%- include('arrow',{direction:'right'}) %></button></dialog>
+<% if(page.startsWith('admin')) { %><%- include('photo-crop') %><% } %>
 </body></html>

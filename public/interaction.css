@@ -1,0 +1,7 @@
+/* Load last so every page uses one consistent interaction treatment. */
+*{-webkit-tap-highlight-color:transparent}
+html:not([data-input-mode=keyboard]) :focus,
+html:not([data-input-mode=keyboard]) :focus-visible{outline:none!important}
+html[data-input-mode=keyboard] :focus-visible{outline:2px solid var(--red)!important;outline-offset:3px}
+.select-trigger[aria-expanded=true]{outline:none}
+input:focus,textarea:focus,select:focus{box-shadow:none}

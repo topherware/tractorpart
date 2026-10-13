@@ -38,7 +38,7 @@ try {
   const page = await browser.newPage();
   await page.goto(base + "/admin/login");
   await page.getByLabel("Email").fill("upload@example.test");
-  await page.getByLabel("Password").fill(password);
+  await page.getByLabel("Password", { exact: true }).fill(password);
   await Promise.all([
     page.waitForURL(base + "/admin"),
     page.getByRole("button", { name: "Masuk", exact: true }).click(),
@@ -60,6 +60,7 @@ try {
       mimeType: "image/png",
       buffer: original,
     });
+  await page.getByRole("button", { name: "Gunakan Foto", exact: true }).click();
   await Promise.all([
     page.waitForURL(base + "/admin/products"),
     page.locator("[data-publication=draft]").click(),
@@ -75,7 +76,8 @@ try {
     product.image_asset_id,
   );
   assert.equal(asset.mime_type, "image/webp");
-  assert.equal(asset.width, 1400);
+  assert.equal(asset.width, 800);
+  assert.equal(asset.height, 800);
   assert.equal((await fetch(base + "/media/" + asset.id)).status, 404);
   await page.goto(base + "/admin/products/new");
   await page.locator("#name").fill("Too Large");

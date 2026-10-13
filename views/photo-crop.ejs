@@ -1,0 +1,9 @@
+<dialog id="photo-crop-dialog" class="photo-crop-dialog" aria-labelledby="photo-crop-title" aria-describedby="photo-crop-help">
+  <div class="photo-crop-heading"><h2 id="photo-crop-title">Atur Foto</h2><button type="button" class="photo-crop-close" data-crop-cancel aria-label="Tutup editor foto"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
+  <p id="photo-crop-help">Geser foto untuk mengatur posisi. Gunakan zoom atau cubit dengan dua jari.</p>
+  <div class="photo-crop-stage"><canvas id="photo-crop-canvas" width="640" height="640" tabindex="0" role="img" aria-label="Pratinjau potongan foto. Gunakan tombol panah untuk menggeser." aria-describedby="photo-crop-help"></canvas><span class="photo-crop-grid" aria-hidden="true"></span></div>
+  <div class="photo-crop-zoom"><label for="photo-crop-zoom">Zoom</label><output for="photo-crop-zoom" id="photo-crop-value" translate="no">100%</output><input type="range" id="photo-crop-zoom" min="1" max="4" step="any" value="1"></div>
+  <div class="photo-crop-modes"><button class="button" type="button" data-crop-fit>Foto Utuh</button><button class="button" type="button" data-crop-fill>Isi Bingkai</button></div>
+  <p class="field-error" data-crop-error role="alert" hidden></p>
+  <div class="photo-crop-actions"><button class="button" type="button" data-crop-cancel>Batal</button><button class="button primary" type="button" data-crop-apply>Gunakan Foto</button></div>
+</dialog>

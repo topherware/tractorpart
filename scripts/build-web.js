@@ -10,17 +10,21 @@ const styles = [
   "status.css",
   "sections.css",
   "catalog-controls.css",
+  "photo-crop.css",
+  "interaction.css",
 ];
 const scripts = {
-  public: ["i18n.js", "motion.js", "app.js", "catalog-controls.js"],
+  public: ["interaction.js", "i18n.js", "motion.js", "app.js", "catalog-controls.js"],
   admin: [
+    "interaction.js",
     "i18n.js",
     "admin-i18n.js",
     "photo-upload.js",
+    "photo-crop.js",
     "app.js",
     "catalog-controls.js",
   ],
-  login: ["i18n.js", "app.js", "catalog-controls.js"],
+  login: ["interaction.js", "i18n.js", "app.js", "catalog-controls.js"],
 };
 const output = new URL("../public/bundles/", import.meta.url);
 await fs.mkdir(output, { recursive: true });
