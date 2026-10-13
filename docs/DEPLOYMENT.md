@@ -143,11 +143,11 @@ Jangan memasukkan `ADMIN_PASSWORD`, `ADMIN_EMAIL`, `DATA_DIR`, atau `BACKUP_DIR`
 4. Salin URL foto draft `/media/ID` ke jendela incognito: harus **404**.
 5. Terbitkan produk dengan harga, deskripsi, kategori dan foto. Periksa Home, katalog, detail serta foto melalui incognito.
 6. Ganti harga/foto/status dari admin; refresh publik dan pastikan perubahan tampil. Kembalikan ke draft; detail dan foto harus hilang dari publik.
-7. Isi profil, WhatsApp, alamat, jam operasional dan tautan platform asli. Upload foto galeri. Cek publik serta tombol WhatsApp.
+7. Isi profil dan informasi kontak asli di admin. Buka **Kontak / WhatsApp utama**, isi nomor tujuan dengan format `08...`, `62...`, atau `+62...`, lalu **Simpan Perubahan**. Alamat, jam, peta dan tautan platform tampil pada bagian Kontak di Home. Semua tombol Hubungi Kami/Cek Ketersediaan langsung membuka WhatsApp. Jika nomor kosong, Home menampilkan placeholder. Upload foto galeri dan periksa hasilnya dari desktop/mobile.
 8. Logout, login ulang dari perangkat lain, dan periksa data. Jalankan Redeploy sekali dan pastikan produk serta foto tetap ada.
 9. Periksa logo, hero, favicon, bahasa, menu mobile, pencarian, dropdown dan pagination. Buka `/robots.txt` dan `/sitemap.xml`.
 
-Foto asli maksimal **5 MB**. Untuk upload browser di atas 3 MB, aplikasi mengecilkan foto menjadi WebP sebelum mengirim, sehingga multipart berada di bawah batas request Vercel 4,5 MB. Server tetap memeriksa foto sebelum menyimpan. Klien API eksternal harus mengirim multipart di bawah batas Vercel juga.
+Foto asli maksimal **5 MB**. Untuk upload browser di atas 3 MB, aplikasi mengecilkan foto menjadi WebP (atau JPEG bila browser tidak mendukung ekspor WebP) sebelum mengirim, sehingga multipart berada di bawah batas request Vercel 4,5 MB. Server tetap memeriksa foto sebelum menyimpan. Klien API eksternal harus mengirim multipart di bawah batas Vercel juga.
 
 Foto produk dan galeri membuka editor **Atur Foto** setelah dipilih. Geser untuk mengatur posisi, gunakan slider zoom, scroll mouse, tombol panah/+/−, atau gesture pinch dua jari di mobile. **Isi Bingkai** memenuhi kotak persegi; **Foto Utuh** menampilkan seluruh foto dengan ruang putih bila proporsi berbeda. Tekan **Gunakan Foto**, lalu simpan form agar foto diunggah. Tombol **Atur Foto** di samping input membuka kembali foto asli untuk mengubah crop selama halaman belum ditinggalkan. **Batal** atau Escape mempertahankan crop yang terakhir disetujui. Foto yang disimpan berbentuk persegi, maksimal 1.400 px per sisi, tanpa memperbesar sumber kecil. Foto toko pada halaman Tentang tetap menggunakan upload biasa.
 

@@ -48,9 +48,25 @@
 .public-body .about-strip .body-copy { font-size: 16px; }
 .action-icon { display: inline-flex; align-items: center; flex: none; width: 18px; height: 18px; }
 .action-icon svg { display: block; width: 18px; height: 18px; }
+.public-body .contact-section .contact-layout { gap: 56px; margin-top: 0; }
+.public-body .contact-section .contact-primary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.public-body .contact-primary h3 { font-family: var(--display); font-size: 46px; line-height: 1.1; margin: 20px 0; }
+.public-body .contact-data .text-link { display: inline-flex; align-items: center; gap: 8px; }
+@media (min-width: 640px) and (max-width: 899px) {
+  .public-body .contact-section .contact-primary { padding: 32px; }
+  .public-body .contact-primary h3 { font-size: 32px; }
+}
 @media (max-width: 639px) {
   .public-body .section-heading,
   .public-body .catalog-heading { gap: 12px; margin-bottom: 28px; }
   .public-body .section-heading > p,
   .public-body .catalog-heading > p { font-size: 13px; }
+  .public-body .contact-section .contact-layout { gap: 28px; }
+  .public-body .contact-primary h3 { font-size: 38px; }
 }

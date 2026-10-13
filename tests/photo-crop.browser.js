@@ -147,12 +147,54 @@ try {
   assert.ok(await phone.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
   await phone.goto(base+'/admin/about');assert.equal(await phone.locator('[data-photo]').getAttribute('data-crop'),null);
   const fallback = await browser.newContext({viewport:{width:360,height:800}});
-  await fallback.addInitScript(()=>{window.createImageBitmap=undefined;});
+  await fallback.addInitScript(()=>{window.createImageBitmap=async()=>{throw new Error('decoder-unavailable');};});
   const fallbackPage = await fallback.newPage();await login(fallbackPage);
   await fallbackPage.goto(base+'/admin/products/new');await choose(fallbackPage,'#image',portrait);await approve(fallbackPage);
   assert.ok(await fallbackPage.locator('[data-preview]').isVisible());await fallback.close();
+  // Safari can decode WebP but return PNG when asked to encode it.
+  const safari = await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true});
+  await safari.addInitScript(()=>{
+    const original = HTMLCanvasElement.prototype.toBlob;
+    HTMLCanvasElement.prototype.toBlob = function(callback,type,quality) {
+      return original.call(this,callback,type==='image/webp'?'image/png':type,quality);
+    };
+  });
+  const safariPage = await safari.newPage();await login(safariPage);
+  safariPage.on('pageerror',e=>errors.push(e.message));
+  await safariPage.goto(base+'/admin/gallery');await choose(safariPage,'#gallery-image',portrait);
+  await safariPage.getByRole('button',{name:'Gunakan Foto',exact:true}).click();
+  await safariPage.waitForFunction(()=>!document.querySelector('#photo-crop-dialog').open,{},{timeout:3000});
+  const exported = await safariPage.locator('#gallery-image').evaluate(input=>{
+    const form=input.closest('form');
+    const data=new FormData(form);window.TractorPartPhotoEditor.prepare(form,data);
+    const photo=data.get('image');return {type:photo.type,name:photo.name};
+  });
+  assert.deepEqual(exported,{type:'image/jpeg',name:'photo.jpg'},'Unsupported WebP encoder must fall back to JPEG with a matching filename');
+  await Promise.all([safariPage.waitForEvent('load'),safariPage.getByRole('button',{name:'Tambah Foto',exact:true}).click()]);
+  const safariAsset = await one('SELECT m.* FROM media_assets m JOIN gallery_items g ON g.image_asset_id=m.id ORDER BY g.id DESC LIMIT 1');
+  const safariMetadata = await sharp(path.join(process.env.DATA_DIR,'uploads',safariAsset.storage_key)).metadata();
+  assert.equal(safariMetadata.format,'webp');assert.equal(safariAsset.width,safariAsset.height);
+  await safariPage.goto(base+'/admin/products/new');
+  await safariPage.locator('#image').setInputFiles({name:'camera.jpg',mimeType:'image/jpeg',buffer:oriented});
+  await safariPage.waitForFunction(()=>document.querySelector('#photo-crop-dialog').open);
+  // Failed encoders must leave the photo and chosen pose available to retry.
+  await safariPage.evaluate(()=>{window.realPhotoToBlob=HTMLCanvasElement.prototype.toBlob;HTMLCanvasElement.prototype.toBlob=function(callback){callback(null);};});
+  await safariPage.getByRole('button',{name:'Gunakan Foto',exact:true}).click();
+  await safariPage.locator('[data-crop-error]:visible').waitFor();
+  assert.equal(await safariPage.locator('#photo-crop-dialog').evaluate(d=>d.open),true);
+  await safariPage.evaluate(()=>{HTMLCanvasElement.prototype.toBlob=window.realPhotoToBlob;});
+  await approve(safariPage);
+  await safariPage.getByLabel('Nama barang').fill('Safari Camera Product');
+  await safariPage.getByLabel('Harga (Rupiah)').fill('100000');
+  await safariPage.locator('#category_id-trigger').click();await safariPage.locator('#category_id-option-1').click();
+  await safariPage.getByLabel('Deskripsi',{exact:true}).fill('JPEG camera photo after portable canvas export.');
+  await Promise.all([safariPage.waitForURL(base+'/admin/products'),safariPage.getByRole('button',{name:'Terbitkan Produk'}).click()]);
+  const cameraAsset = await one("SELECT m.* FROM media_assets m JOIN products p ON p.image_asset_id=m.id WHERE p.name='Safari Camera Product'");
+  assert.equal(cameraAsset.width,cameraAsset.height);
+  assert.equal((await sharp(path.join(process.env.DATA_DIR,'uploads',cameraAsset.storage_key)).metadata()).format,'webp');
+  await safari.close();
   assert.deepEqual(errors,[]);
-  console.log('PASS: desktop drag/zoom/keyboard, mobile pinch and pan, EXIF orientation, cancel/re-edit, invalid/oversized files, exact stored square crop, gallery create/replace/public display, 2 accessibility audits, zero page errors.');
+  console.log('PASS: desktop drag/zoom/keyboard, mobile pinch and pan, EXIF orientation, cancel/re-edit, invalid/oversized files, exact stored square crop, gallery create/replace/public display, Safari WebP-to-JPEG fallback for gallery and camera product, encoder failure/retry, decoder fallback, 2 accessibility audits, zero page errors.');
 } finally {
   await browser.close();await new Promise(resolve=>server.close(resolve));await db.close();
 }

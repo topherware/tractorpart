@@ -218,7 +218,6 @@ test("Cloud CRUD persists IDs, prices, case-insensitive search, filters and publ
   for (const url of [
     "/",
     "/products",
-    "/contact",
     "/admin/products",
     "/admin/products/new",
     "/admin/products/" + product.id + "/edit",
@@ -228,6 +227,9 @@ test("Cloud CRUD persists IDs, prices, case-insensitive search, filters and publ
     "/admin/contact",
   ])
     assert.equal((await admin.get(url)).response.status, 200, url);
+  const contactRedirect = (await admin.get('/contact')).response;
+  assert.equal(contactRedirect.status, 301);
+  assert.equal(contactRedirect.headers.get('location'), '/#kontak');
   const other = new Client();
   await other.login();
   assert.match((await other.get("/admin/products")).html, /Filter Cloud/);

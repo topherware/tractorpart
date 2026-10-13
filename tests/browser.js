@@ -184,13 +184,42 @@ try{
   await check('AC08 price/photo edit visible immediately; backend validation retains input and photo',async()=>{const p=one("SELECT * FROM products WHERE name='Produk Browser Asli Pengujian'");await page.goto(base+`/admin/products/${p.id}/edit`);await page.getByLabel('Harga (Rupiah)').fill('375000');await page.getByLabel('Pilih / Ganti Foto').setInputFiles({name:'new.png',mimeType:'image/png',buffer:await sharp({create:{width:450,height:400,channels:3,background:'#0b349a'}}).png().toBuffer()});await page.getByRole('button',{name:'Gunakan Foto',exact:true}).click();await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.waitForURL(base+'/admin/products');const changed=one('SELECT * FROM products WHERE id=?',p.id);assert.notEqual(changed.image_asset_id,p.image_asset_id);await page.goto(base+'/products/'+p.slug);assert.match(await page.locator('.detail-price').textContent(),/Rp375\.000/);await page.goto(base+`/admin/products/${p.id}/edit`);await page.getByLabel('Deskripsi',{exact:true}).fill('Pendek');await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.locator('[data-error=description]').waitFor({state:'visible'});assert.equal(await page.getByLabel('Deskripsi',{exact:true}).inputValue(),'Pendek');assert.equal(await page.getByLabel('Deskripsi',{exact:true}).evaluate(el=>el===document.activeElement),true);assert.equal(one('SELECT image_asset_id FROM products WHERE id=?',p.id).image_asset_id,changed.image_asset_id);page.once('dialog',dialog=>dialog.accept());await page.goto(base+'/admin');});
   await check('AC14 network failure, retry and unsaved-change confirmation',async()=>{await page.goto(base+'/admin/products/new');await page.getByLabel('Nama barang').fill('Draft Jaringan Browser');await page.route('**/api/admin/products',route=>route.abort('failed'));await page.getByRole('button',{name:'Simpan Draft'}).click();await page.getByRole('button',{name:'Coba Lagi',exact:true}).waitFor();assert.equal(await page.getByLabel('Nama barang').inputValue(),'Draft Jaringan Browser');await page.unroute('**/api/admin/products');let dirtyDialog=false;page.once('dialog',dialog=>{dirtyDialog=true;dialog.dismiss();});await page.getByRole('link',{name:'Kembali ke daftar produk'}).click();assert.equal(dirtyDialog,true);assert.ok(page.url().endsWith('/new'));await page.getByRole('button',{name:'Coba Lagi',exact:true}).click();await page.waitForURL(base+'/admin/products');assert.ok(one("SELECT id FROM products WHERE name='Draft Jaringan Browser'"));});
   await check('AC14 cancelled deletion sends no DELETE request',async()=>{await page.goto(base+'/admin/products?q=Draft%20Jaringan%20Browser');let deletes=0;const listener=request=>{if(request.method()==='DELETE')deletes++;};page.on('request',listener);await page.locator('[data-delete]').first().click();await page.locator('#confirm-dialog').getByRole('button',{name:'Batal'}).click();assert.equal(deletes,0);assert.ok(one("SELECT id FROM products WHERE name='Draft Jaringan Browser'"));page.off('request',listener);});
-  await check('AC09 About and Contact edit updates public Home/footer',async()=>{await page.goto(base+'/admin/about');await page.getByLabel(/^Judul/).fill('Tentang Toko Browser');await page.getByLabel('Ringkasan Home').fill('Ringkasan dari admin yang tampil pada Home publik.');await page.getByLabel('Deskripsi lengkap').fill('Informasi lengkap profil toko yang sudah diperbarui untuk pengujian.');await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.getByRole('status').filter({hasText:'Perubahan berhasil'}).waitFor();await page.goto(base+'/');assert.match(await page.locator('.about-strip').textContent(),/Ringkasan dari admin/);await page.goto(base+'/admin/contact');await page.getByLabel('WhatsApp utama').fill('081234567890');await page.getByLabel('Alamat toko').fill('Alamat Toko Browser');await page.getByLabel('Jam operasional').fill('Senin–Sabtu 08.00–17.00');await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.getByRole('status').filter({hasText:'Perubahan berhasil'}).waitFor();await page.goto(base+'/contact');assert.match(await page.locator('.site-footer').textContent(),/Alamat Toko Browser/);assert.ok(await page.getByRole('link',{name:'Chat melalui WhatsApp'}).getAttribute('href').then(h=>h.includes('6281234567890')));});
+  await check('AC09 About and Contact edit updates public Home/footer',async()=>{await page.goto(base+'/admin/about');await page.getByLabel(/^Judul/).fill('Tentang Toko Browser');await page.getByLabel('Ringkasan Home').fill('Ringkasan dari admin yang tampil pada Home publik.');await page.getByLabel('Deskripsi lengkap').fill('Informasi lengkap profil toko yang sudah diperbarui untuk pengujian.');await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.getByRole('status').filter({hasText:'Perubahan berhasil'}).waitFor();await page.goto(base+'/');assert.match(await page.locator('.about-strip').textContent(),/Ringkasan dari admin/);await page.goto(base+'/admin/contact');await page.getByLabel('WhatsApp utama').fill('081234567890');await page.getByLabel('Alamat toko').fill('Alamat Toko Browser');await page.getByLabel('Jam operasional').fill('Senin–Sabtu 08.00–17.00');await page.getByRole('button',{name:'Simpan Perubahan'}).click();await page.getByRole('status').filter({hasText:'Perubahan berhasil'}).waitFor();await page.goto(base+'/contact');assert.match(await page.locator('.site-footer').textContent(),/Alamat Toko Browser/);assert.ok(await page.getByRole('link',{name:'Cek Ketersediaan',exact:true}).getAttribute('href').then(h=>h.includes('6281234567890')));});
+  await check('Contact on Home, direct WhatsApp actions and mobile section navigation',async()=>{
+    for(const width of [360,768,1440]){
+      await page.setViewportSize({width,height:900});await page.goto(base+'/',{waitUntil:'networkidle'});
+      const contact=page.locator('#kontak');await contact.scrollIntoViewIfNeeded();
+      assert.match(await contact.textContent(),/Alamat Toko Browser/);
+      assert.ok((await contact.getByRole('link',{name:'Cek Ketersediaan',exact:true}).getAttribute('href')).startsWith('https://wa.me/6281234567890?'));
+      for(const link of await page.locator('a').all()){
+        const text=await link.textContent();
+        if(/Hubungi Kami|Cek Ketersediaan/.test(text))assert.ok((await link.getAttribute('href')).startsWith('https://wa.me/6281234567890?'),text);
+      }
+      assert.equal(await page.locator('a[href="/contact"]').count(),0);
+      assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1),false);
+      await page.screenshot({path:path.join(output,'contact-home-'+width+'.png'),animations:'disabled'});
+    }
+    const dynamic=await page.locator('#kontak [translate="no"]').allTextContents();
+    await page.getByRole('button',{name:'English',exact:true}).click();
+    assert.deepEqual(await page.locator('#kontak [translate="no"]').allTextContents(),dynamic);
+    assert.equal(await page.locator('#kontak .section-heading h2').textContent(),'Check spare parts availability.');
+    await page.getByRole('button',{name:'Bahasa Indonesia',exact:true}).click();
+    await page.setViewportSize({width:360,height:900});await page.goto(base+'/products');
+    await page.getByRole('button',{name:'Buka menu navigasi'}).click();
+    await page.waitForFunction(()=>document.getElementById('mobile-menu').dataset.motion==='ready');
+    await page.locator('.site-nav').getByRole('link',{name:'Kontak',exact:true}).click();
+    await page.waitForURL(base+'/#kontak');
+    await page.waitForFunction(()=>Math.abs(document.getElementById('kontak').getBoundingClientRect().top-document.querySelector('.site-header').offsetHeight-28)<2);
+    assert.equal(await page.locator('#mobile-menu').evaluate(dialog=>dialog.open),false);
+    await page.setViewportSize({width:1440,height:1000});
+  });
   await check('AC10 Gallery photo-only upload, reorder, hide, replace, publish and delete',async()=>{
     await page.goto(base+'/admin/gallery');
     assert.equal(await page.locator('.admin-main [name=title],.admin-main [name=caption],.admin-main [name=alt_text]').count(),0);
     const count=one('SELECT count(*) n FROM gallery_items').n;
     const file={name:'gallery.png',mimeType:'image/png',buffer:await sharp({create:{width:500,height:350,channels:3,background:'#d90b17'}}).png().toBuffer()};
     await page.locator('#gallery-image').setInputFiles(file);
+    await page.getByRole('button',{name:'Gunakan Foto',exact:true}).click();
     await Promise.all([page.waitForNavigation(),page.getByRole('button',{name:'Tambah Foto',exact:true}).click()]);
     const added=one('SELECT * FROM gallery_items ORDER BY id DESC LIMIT 1');
     assert.equal(one('SELECT count(*) n FROM gallery_items').n,count+1);assert.equal(added.is_published,1);
@@ -204,7 +233,7 @@ try{
     assert.equal(await page.locator('[data-src="/media/'+added.image_asset_id+'"]').count(),0);
     assert.equal(await page.locator('.gallery-card h3,.gallery-card p').count(),0);
     await page.goto(base+'/admin/gallery');item=page.locator('[data-gallery-id="'+added.id+'"]');
-    await item.getByLabel('Ganti Foto').setInputFiles(file);await item.getByRole('combobox',{name:'Publikasi'}).click();await item.getByRole('option',{name:'Terbit',exact:true}).click();
+    await item.getByLabel('Ganti Foto').setInputFiles(file);await page.getByRole('button',{name:'Gunakan Foto',exact:true}).click();await item.getByRole('combobox',{name:'Publikasi'}).click();await item.getByRole('option',{name:'Terbit',exact:true}).click();
     await Promise.all([page.waitForNavigation(),item.getByRole('button',{name:'Simpan',exact:true}).click()]);
     const updated=one('SELECT * FROM gallery_items WHERE id=?',added.id);assert.notEqual(updated.image_asset_id,added.image_asset_id);
     await page.goto(base+'/gallery');assert.equal(await page.locator('[data-src="/media/'+updated.image_asset_id+'"]').count(),1);

@@ -54,7 +54,7 @@ Akun dibuat pada database yang sedang dikonfigurasi. Hapus nilai `ADMIN_PASSWORD
 
 Preview desain admin tanpa akun tersedia pada `/admin/preview` hanya di development; semua kontrol preview nonaktif. Produksi menonaktifkan preview.
 
-Database Supabase baru berisi placeholder profil/kontak, tanpa produk dummy. Nomor WhatsApp kosong mengarahkan tombol kontak ke halaman Contact. Impor SQLite mengecualikan produk `[Dummy]` secara default dan tidak mengubah sumber lokal. Untuk contoh offline: `npm run seed:demo`.
+Database Supabase baru berisi placeholder profil/kontak, tanpa produk dummy. Semua informasi kontak tampil di bagian Kontak pada Home. URL lama `/contact` mengarah ke `/#kontak`. Isi **Admin / Kontak / WhatsApp utama**, lalu **Simpan Perubahan**: seluruh tombol Hubungi Kami/Cek Ketersediaan langsung membuka WhatsApp dengan nomor tersebut. Jika nomor belum diisi, tombol menuju placeholder Kontak pada Home. Impor SQLite mengecualikan produk `[Dummy]` secara default dan tidak mengubah sumber lokal. Untuk contoh offline: `npm run seed:demo`.
 
 ## Fitur admin
 
@@ -67,7 +67,7 @@ Database Supabase baru berisi placeholder profil/kontak, tanpa produk dummy. Nom
 
 Foto asli maksimal 5 MB. Browser mengoptimalkan foto besar sebelum upload untuk memenuhi batas request Vercel 4,5 MB. Server tetap memvalidasi dan mengubah foto ke WebP maksimal 1.400 px.
 
-Upload foto produk dan galeri membuka editor crop persegi: geser, zoom, pinch mobile, Foto Utuh, dan Isi Bingkai. Pilih Gunakan Foto sebelum menyimpan. Crop dapat diatur ulang dari foto asli selama form masih terbuka.
+Upload foto produk dan galeri membuka editor crop persegi: geser, zoom, pinch mobile, Foto Utuh, dan Isi Bingkai. Pilih Gunakan Foto sebelum menyimpan. Crop dapat diatur ulang dari foto asli selama form masih terbuka. Browser yang tidak mendukung ekspor WebP memakai JPEG, lalu server menyimpannya sebagai WebP.
 
 ## Pengujian
 

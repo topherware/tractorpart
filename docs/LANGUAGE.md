@@ -4,7 +4,7 @@ Header publik mengikuti komposisi referensi: menu di kiri, logo TractorPart tepa
 
 Bahasa awal adalah Indonesia. Tombol English mengubah teks antarmuka publik tanpa reload. Pilihan disimpan pada `localStorage` dengan kunci `tractorpart-language` dan digunakan kembali setelah refresh maupun perpindahan halaman. Halaman admin memakai bahasa Indonesia.
 
-Yang diterjemahkan adalah teks statis yang diberi penanda eksplisit: menu, headline Home, CTA, label filter, opsi sorting/ketersediaan, breadcrumb, pagination, teks kosong, disclaimer, footer, label aksesibilitas, dan judul tab Home/katalog/Contact. Pesan WhatsApp menggunakan bahasa pilihan; nama produk dan URL produk tetap dipertahankan. Harga tetap dalam Rupiah.
+Yang diterjemahkan adalah teks statis yang diberi penanda eksplisit: menu, headline Home, CTA, label filter, opsi sorting/ketersediaan, breadcrumb, pagination, teks kosong, disclaimer, footer, label aksesibilitas, dan judul tab Home/katalog. Pesan WhatsApp menggunakan bahasa pilihan; nama produk dan URL produk tetap dipertahankan. Harga tetap dalam Rupiah.
 
 Nama/deskripsi produk, nama kategori, judul/ringkasan/deskripsi profil, alt text foto admin, judul/caption galeri, alamat, jam operasional, serta nomor kontak tetap persis dari database. Toggle tidak menulis database, tidak memanggil layanan terjemahan, dan tidak mengubah input pencarian maupun nilai filter. Detail produk mempertahankan nama admin sebagai judul tab.
 

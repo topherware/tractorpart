@@ -1,7 +1,7 @@
 <div class="about-layout">
   <div>
     <p class="preserve-lines body-copy" translate="no"><%= about.description %></p>
-    <a class="button primary" href="/contact"><span data-i18n="contactUs">Hubungi Kami</span> <%- include('icon',{name:'chat'}) %></a>
+    <a class="button primary" href="<%= whatsapp(contact) %>"><span data-i18n="contactUs">Hubungi Kami</span> <%- include('icon',{name:'phone'}) %></a>
   </div>
   <% if(about.image_asset_id){ %>
     <img class="about-photo" src="/media/<%= about.image_asset_id %>" width="<%= about.image_width %>" height="<%= about.image_height %>" alt="<%= about.image_alt %>">

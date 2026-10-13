@@ -1,4 +1,42 @@
 // Keep multipart requests below Vercel's 4.5 MB function payload limit.
+async function decodePhotoImage(file) {
+  if (typeof createImageBitmap === 'function') {
+    try { return await createImageBitmap(file, { imageOrientation: 'from-image' }); } catch {}
+  }
+  const url = URL.createObjectURL(file);
+  try {
+    const image = new Image(); image.src = url;
+    await image.decode(); return image;
+  } finally { URL.revokeObjectURL(url); }
+}
+
+async function encodePhotoCanvas(canvas) {
+  const limit = 3 * 1024 * 1024;
+  const encode = (source, type, quality) => new Promise(resolve => {
+    try { source.toBlob(resolve, type, quality); } catch { resolve(null); }
+  });
+  const webp = await encode(canvas, 'image/webp', .84);
+  if (webp?.type === 'image/webp' && webp.size > 0 && webp.size <= limit) return webp;
+  // iOS/Safari may return PNG for an unsupported WebP encoder. Send JPEG
+  // instead; the server validates its signature and stores permanent WebP.
+  let source = canvas;
+  for (let step = 0; step < 4; step++) {
+    for (const quality of [.84, .7, .55]) {
+      const jpeg = await encode(source, 'image/jpeg', quality);
+      if (jpeg?.type === 'image/jpeg' && jpeg.size > 0 && jpeg.size <= limit) return jpeg;
+    }
+    const smaller = document.createElement('canvas');
+    smaller.width = Math.max(1, Math.round(source.width * .8));
+    smaller.height = Math.max(1, Math.round(source.height * .8));
+    const context = smaller.getContext('2d');
+    context.fillStyle = '#fff'; context.fillRect(0, 0, smaller.width, smaller.height);
+    context.drawImage(source, 0, 0, smaller.width, smaller.height);
+    source = smaller;
+  }
+  throw new Error('photo-export');
+}
+const photoFilename = blob => blob.type === 'image/jpeg' ? 'photo.jpg' : 'photo.webp';
+
 async function preparePhotoUpload(data) {
   const file = data.get("image");
   if (!(file instanceof File) || !file.size) return;
@@ -29,7 +67,7 @@ async function preparePhotoUpload(data) {
     fail();
   let bitmap;
   try {
-    bitmap = await createImageBitmap(file);
+    bitmap = await decodePhotoImage(file);
   } catch {
     fail();
   }
@@ -39,16 +77,13 @@ async function preparePhotoUpload(data) {
     const canvas = document.createElement("canvas");
     canvas.width = Math.max(1, Math.round(bitmap.width * ratio));
     canvas.height = Math.max(1, Math.round(bitmap.height * ratio));
-    canvas
-      .getContext("2d")
-      .drawImage(bitmap, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise((resolve) =>
-      canvas.toBlob(resolve, "image/webp", 0.84),
-    );
-    if (!blob || blob.type !== "image/webp" || blob.size > 3 * 1024 * 1024)
-      fail();
-    data.set("image", blob, "photo.webp");
+    const context = canvas.getContext("2d");
+    context.fillStyle = '#fff'; context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+    let blob;
+    try { blob = await encodePhotoCanvas(canvas); } catch { fail(); }
+    data.set("image", blob, photoFilename(blob));
   } finally {
-    bitmap.close();
+    bitmap.close?.();
   }
 }

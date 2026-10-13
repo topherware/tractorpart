@@ -35,13 +35,7 @@ window.TractorPartPhotoEditor = (() => {
         pos += size + (png ? 12 : 8 + size % 2);
       }
     }
-    let image;
-    if (typeof createImageBitmap === 'function') image = await createImageBitmap(file, { imageOrientation: 'from-image' });
-    else {
-      const url = URL.createObjectURL(file);
-      try { image = new Image(); image.src = url; await image.decode(); }
-      finally { URL.revokeObjectURL(url); }
-    }
+    const image = await decodePhotoImage(file);
     if (!image.width || !image.height || image.width * image.height > 40000000) {
       image.close?.(); throw new Error('size');
     }
@@ -167,8 +161,7 @@ window.TractorPartPhotoEditor = (() => {
       const result = crop.getContext('2d'), {width,height} = dimensions();
       result.fillStyle = '#fff'; result.fillRect(0,0,size,size);
       result.drawImage(session.image,(session.x-width/2)*size,(session.y-height/2)*size,width*size,height*size);
-      const blob = await new Promise(resolve => crop.toBlob(resolve,'image/webp',.84));
-      if (!blob || blob.type !== 'image/webp' || blob.size > 3*1024*1024) throw new Error('export');
+      const blob = await encodePhotoCanvas(crop);
       const state = session.state;
       if (state.url) URL.revokeObjectURL(state.url);
       state.file = session.file; state.blob = blob; state.pose = {x:session.x,y:session.y,zoom:session.zoom};
@@ -205,7 +198,7 @@ window.TractorPartPhotoEditor = (() => {
           const error = new Error(translate('Atur foto dan pilih Gunakan Foto sebelum menyimpan.'));
           error.errors = {image:error.message}; throw error;
         }
-        if (state?.blob) data.set(input.name,state.blob,'photo.webp');
+        if (state?.blob) data.set(input.name,state.blob,photoFilename(state.blob));
       }
     },
     reset(form) {

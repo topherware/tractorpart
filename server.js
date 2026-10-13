@@ -187,9 +187,7 @@ app.get("/products/:slug", async (req, res) => {
 });
 app.get("/about", (req, res) => res.redirect(301, "/#tentang"));
 app.get("/gallery", (req, res) => res.redirect(301, "/#galeri"));
-app.get("/contact", (req, res) =>
-  render(req, res, "contact", "Hubungi TractorPart"),
-);
+app.get("/contact", (req, res) => res.redirect(301, "/#kontak"));
 app.get("/api/products", async (req, res) =>
   res.json(await catalog(req.query)),
 );
@@ -234,7 +232,6 @@ app.get("/sitemap.xml", async (req, res) => {
   const urls = [
     "/",
     "/products",
-    "/contact",
     ...(
       await all(
         "SELECT slug FROM products WHERE publication_status='published'",

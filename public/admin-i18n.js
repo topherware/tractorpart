@@ -37,7 +37,7 @@
     'Gunakan JPG, PNG, atau WebP asli maksimal 5 MB. Foto bergerak tidak didukung.':'Use an original JPG, PNG, or WebP up to 5 MB. Animated images are not supported.',
     'Foto belum dapat diproses. Coba lagi.':'The photo could not be processed. Try again.',
     'Atur foto dan pilih Gunakan Foto sebelum menyimpan.':'Adjust the photo and choose Use Photo before saving.',
-    'Informasi kontak':'Contact information','Data yang sama digunakan oleh Contact, tombol WhatsApp, dan footer.':'Used by the Contact page, WhatsApp buttons, and footer.',
+    'Informasi kontak':'Contact information','Data ini tampil di halaman utama dan footer. WhatsApp utama menjadi tujuan semua tombol Hubungi Kami dan Cek Ketersediaan.':'Shown on the homepage and footer. The primary WhatsApp number receives all Contact Us and Check Availability requests.',
     'WhatsApp utama':'Primary WhatsApp','Telepon':'Phone','Format 08, 62, atau +62.':'Use 08, 62, or +62.','Alamat toko':'Store address','Jam operasional':'Opening hours',
     'Lokasi & tautan toko':'Location & store links','Tautan lokasi Maps':'Maps URL','Platform & media sosial':'Platforms & social media',
     'Tambahkan Tokopedia, Shopee, Instagram, atau platform lain. Isi nama dan URL HTTPS.':'Add Tokopedia, Shopee, Instagram, or another platform. Enter its name and HTTPS URL.',
