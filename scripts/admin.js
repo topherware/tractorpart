@@ -14,7 +14,7 @@ try {
 } catch (e) {
   console.error(
     e.code === "23505" || e.code?.includes("CONSTRAINT")
-      ? "Email sudah terdaftar."
+      ? "Email sudah terdaftar. Untuk mengganti password, jalankan npm run admin:reset-password."
       : "Pembuatan admin gagal. Periksa konfigurasi dan database.",
   );
   process.exitCode = 1;

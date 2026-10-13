@@ -3,6 +3,17 @@ const adminText=value=>window.TractorPartAdminI18n?.translate(value)||value;
 const openDialog=dialog=>motion?motion.openDialog(dialog):dialog.showModal();
 const closeDialog=dialog=>motion?motion.closeDialog(dialog):dialog.close();
 const csrf=()=>document.querySelector('meta[name="csrf-token"]')?.content;
+document.querySelectorAll('[data-password-toggle]').forEach(button=>{
+  const input=document.getElementById(button.getAttribute('aria-controls'));
+  if(!input)return;
+  button.hidden=false;
+  button.addEventListener('click',()=>{
+    const visible=input.type==='password';
+    input.type=visible?'text':'password';
+    button.setAttribute('aria-pressed',String(visible));
+    button.setAttribute('aria-label',visible?'Sembunyikan password':'Tampilkan password');
+  });
+});
 let toastTimer;function toast(message,error=false){const el=document.getElementById('toast');el.textContent=adminText(message);el.classList.toggle('error',error);el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.hidden=true;},6500);}
 async function api(url,method='POST',body){const multipart=body instanceof FormData;let response;try{response=await fetch(url,{method,headers:{'X-CSRF-Token':csrf(),...(!multipart?{'Content-Type':'application/json'}:{})},body:body?(multipart?body:JSON.stringify(body)):undefined});}catch{const e=new Error('Koneksi gagal. Input tetap tersedia. Periksa jaringan dan coba lagi.');e.network=true;throw e;}let data;try{data=await response.json();}catch{data={error:'Server belum dapat memproses permintaan. Coba lagi.'};}if(!response.ok){const e=new Error(data.error||'Permintaan gagal. Coba lagi.');e.errors=data.errors;e.status=response.status;throw e;}return data;}
 function clearErrors(form){form.querySelectorAll('[data-error]').forEach(e=>e.textContent='');form.querySelectorAll('.invalid').forEach(e=>{e.classList.remove('invalid');e.removeAttribute('aria-invalid');e.removeAttribute('aria-describedby');});const f=form.querySelector('.form-feedback');if(f){f.hidden=true;f.classList.remove('success');}}

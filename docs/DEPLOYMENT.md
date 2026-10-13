@@ -67,6 +67,14 @@ npm run admin:create
 
 Karena `DATABASE_URL` terisi, akun dibuat di Supabase, bukan SQLite. Buka `/admin/login` dan gunakan akun tersebut. Setelah berhasil, kosongkan `ADMIN_PASSWORD`. Tidak ada password bawaan atau pendaftaran publik.
 
+**Mengganti password akun yang sudah ada:** `admin:create` tidak memperbarui akun lama. Isi `ADMIN_EMAIL` dengan email akun yang akan direset dan `ADMIN_PASSWORD` dengan password baru di `.env` lokal, lalu jalankan:
+
+```powershell
+npm run admin:reset-password
+```
+
+Gunakan tanda kutip ganda untuk password dalam `.env`, terutama jika mengandung `#`, agar tidak terbaca sebagai komentar. Reset hanya mengganti password akun admin yang dituju dan mencabut sesi akun tersebut. Setelah verifikasi, kosongkan `ADMIN_PASSWORD`. Tidak perlu redeploy Vercel jika aplikasi menggunakan database Supabase yang sama. Batas percobaan login tetap aktif.
+
 **Pindahkan data SQLite yang sudah ada (opsional):** lakukan sebelum membuat akun di target. Target Supabase harus kosong selain placeholder bawaan. Buat backup lokal terlebih dahulu menggunakan konfigurasi SQLite (`DATABASE_URL` kosong), lalu isi kembali konfigurasi Supabase dan jalankan:
 
 ```powershell

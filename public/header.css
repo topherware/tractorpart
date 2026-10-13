@@ -125,17 +125,15 @@
   .site-nav a { padding: 12px 4px; font-size: 14px; }
 }
 @media (max-width: 767px) {
-  .header-inner { grid-template-rows: 72px; padding: 0 12px; gap: 6px; }
-  .header-brand { width: clamp(80px, calc(100vw - 260px), 150px); }
+  .header-inner { grid-template-rows: 72px; padding: 0 16px; gap: 12px; }
+  .header-brand { width: clamp(108px, calc(100vw - 212px), 164px); }
   .header-actions { grid-column: 3; grid-row: 1; gap: 6px; }
   .header-actions .language-toggle { display: none; }
   .mobile-language { display: block; flex: none; }
-  .site-header .header-cta { width: 44px; height: 44px; min-height: 44px; padding: 0; gap: 0; border-radius: 50%; }
-  .header-cta > [data-i18n="contactUs"] { display: none; }
-  .header-phone svg { width: 20px; height: 20px; }
+  .site-header .header-cta { display: none; }
 }
 @media (max-width: 359px) {
-  .header-inner { padding-inline: 8px; gap: 4px; }
+  .header-inner { padding-inline: 12px; gap: 12px; }
   .header-actions { gap: 4px; }
 }
 @media (prefers-reduced-motion: reduce) {

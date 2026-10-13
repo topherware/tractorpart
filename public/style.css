@@ -71,6 +71,13 @@
 .login-card h1{font-size:36px;margin-top:12px}
 .login-card>p{margin:12px 0 18px}
 .login-card .field{margin-bottom:16px}
+.password-field{position:relative}
+.password-field input{padding-right:58px}
+.password-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);display:grid;place-items:center;width:44px;height:44px;padding:0;border:0;border-radius:10px;background:transparent;color:var(--muted);cursor:pointer}
+.password-toggle[hidden],.password-toggle .password-eye-off,.password-toggle[aria-pressed=true] .password-eye{display:none}
+.password-toggle[aria-pressed=true] .password-eye-off{display:block}
+.password-toggle:hover,.password-toggle[aria-pressed=true]{color:var(--red)}
+.password-toggle:focus-visible{outline:2px solid var(--red);outline-offset:1px}
 .admin-body,.login-body,.admin-body *,.login-body *,
 .admin-body *::before,.admin-body *::after,.login-body *::before,.login-body *::after{
   animation:none!important;transition:none!important;scroll-behavior:auto!important;
