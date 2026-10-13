@@ -115,6 +115,13 @@
 .admin-body .upload-preview .admin-nav-icon{display:block;width:38px;height:38px;margin:auto}
 .contact-save-actions{display:flex;align-items:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border)}
 .contact-save-actions .button{margin:0}
+.contact-editor>.form-row.contact-main-fields{grid-template-columns:repeat(2,minmax(0,1fr))}
+.contact-phones{margin:24px 0}
+.contact-phone-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;max-width:800px;margin:16px 0}
+.contact-phone-row .field,.contact-phone-row .button{margin:0}
+.contact-phones>[data-add-phone]{display:inline-flex;gap:8px;margin-top:4px;min-height:44px}
+.contact-phones>.field-error{display:block;margin-top:8px}
+@media(max-width:639px){.contact-editor>.form-row.contact-main-fields{grid-template-columns:1fr}.contact-phone-row{gap:8px}.contact-phone-row .button{padding-inline:14px;min-height:48px}}
 .contact-link-row{display:grid;grid-template-columns:minmax(120px,.7fr) minmax(180px,1.3fr) auto;gap:12px;align-items:end;margin:16px 0}
 .contact-link-row .field{margin:0}
 .contact-link-row .button{margin:0}

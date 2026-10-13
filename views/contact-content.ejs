@@ -21,9 +21,9 @@
         <% if(contact.maps_url){ %><a class="text-link" href="<%= contact.maps_url %>" target="_blank" rel="noopener noreferrer"><span data-i18n="maps">Buka Peta</span><span class="inline-arrow"><%- include('arrow',{direction:'up-right'}) %></span></a><% } %>
       </div>
       <div><span class="eyebrow" data-i18n="hours">JAM OPERASIONAL</span><p class="preserve-lines" translate="no"><%= contact.opening_hours %></p></div>
-      <% if(contact.phone||contact.email){ %>
+      <% if(contact.phones.length||contact.email){ %>
         <div><span class="eyebrow" data-i18n="otherContact">KONTAK LAINNYA</span>
-          <% if(contact.phone){ %><a href="tel:+<%= contact.phone %>" translate="no">+<%= contact.phone %></a><% } %>
+          <% for(const phone of contact.phones){ %><a href="tel:+<%= phone %>" translate="no">+<%= phone %></a><% } %>
           <% if(contact.email){ %><a href="mailto:<%= contact.email %>" translate="no"><%= contact.email %></a><% } %>
         </div>
       <% } %>

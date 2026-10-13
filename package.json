@@ -20,6 +20,7 @@
     "test": "node --test --test-concurrency=1 tests/acceptance.test.js",
     "test:browser": "node tests/browser.js",
     "test:catalog": "node tests/catalog-controls.browser.js",
+    "test:contact": "node tests/contact-phones.browser.js",
     "check": "node scripts/check.js",
     "build": "node scripts/build-web.js && npm run check",
     "cloud:check": "node --env-file-if-exists=.env scripts/cloud-check.js",

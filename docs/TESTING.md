@@ -5,12 +5,13 @@ Verifikasi awal dijalankan pada 12 Oktober 2026, Node.js 24 dan Chrome headless.
 | Pemeriksaan | Hasil |
 | --- | --- |
 | `npm run build` | Bundle CSS/JavaScript, sintaks JavaScript, template EJS, konfigurasi JSON dan aset produksi valid |
-| `npm test` | 25/25 lulus; AC01–AC15, validasi, keamanan, persistensi lokal dan backup/restore |
+| `npm test` | 26/26 lulus; AC01–AC15, validasi, keamanan, persistensi lokal, beberapa nomor telepon dan backup/restore |
 | `npm run test:cloud` | 9/9 lulus; mesin PostgreSQL terisolasi dan simulasi HTTP Storage |
 | `npm run test:browser` | 18/18 kelompok lulus; publik, admin, mobile, bahasa, transisi dan CRUD |
 | `npm run test:catalog` | Lulus; search, dropdown, pagination, ID/EN, keyboard dan tanpa JavaScript pada empat lebar layar |
 | `npm run test:upload` | Lulus setelah integrasi crop; foto asli 4.809.386 byte dikirim sebagai multipart 471.465 byte, kemudian disimpan sebagai WebP persegi 800×800 px, 438.312 byte |
 | `npm run test:crop` | Lulus; crop desktop/mobile, pinch/geser/keyboard, EXIF, pembatalan, galeri publik, dan aksesibilitas |
+| `npm run test:contact` | Lulus; nomor lama, plus/hapus, simpan/reload, validasi, ID/EN, touch mobile, empat lebar layar, nomor di Home/footer, tujuan WhatsApp tunggal dan dua audit aksesibilitas |
 | `npm audit --omit=dev` | 0 kerentanan runtime ditemukan |
 | Guard produksi | DATABASE_URL kosong dan BASE_URL HTTP ditolak; tidak ada fallback SQLite di produksi |
 
@@ -41,6 +42,7 @@ npm test
 npm run test:cloud
 npm run test:browser
 npm run test:catalog
+npm run test:contact
 npm run test:upload
 npm run test:crop
 ```

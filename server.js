@@ -99,6 +99,7 @@ app.use((req, res, next) => {
   res.locals.contact = {
     whatsapp: "",
     phone: "",
+    phones: [],
     email: "",
     address: "",
     opening_hours: "",
@@ -581,7 +582,7 @@ app.put("/api/admin/about", upload, async (req, res) => {
 app.put("/api/admin/contact", async (req, res) => {
   const errors = {},
     values = {};
-  for (const key of ["whatsapp", "phone"]) {
+  for (const key of ["whatsapp"]) {
     const p = text(req.body[key]);
     values[key] = p ? normalizePhone(p) : "";
     if (p && !values[key])
@@ -589,6 +590,22 @@ app.put("/api/admin/contact", async (req, res) => {
   }
   if (!text(req.body.whatsapp))
     errors.whatsapp = "WhatsApp wajib untuk konfigurasi toko.";
+  if (req.body.phones !== undefined) {
+    try {
+      const input = typeof req.body.phones === 'string' ? JSON.parse(req.body.phones) : req.body.phones;
+      if (!Array.isArray(input) || input.length > 20) throw new Error();
+      const phones = input.map(value => typeof value === 'string' ? normalizePhone(value) : null);
+      if (phones.some(value => !value) || new Set(phones).size !== phones.length) throw new Error();
+      values.phone = phones.join('\n');
+    } catch {
+      errors.phones = "Isi nomor telepon Indonesia yang valid dan berbeda. Maksimal 20 nomor.";
+    }
+  } else {
+    // Keep the original single-phone API compatible with existing clients.
+    const phone = text(req.body.phone);
+    values.phone = phone ? normalizePhone(phone) : '';
+    if (phone && !values.phone) errors.phone = "Gunakan nomor Indonesia format 08, 62, atau +62.";
+  }
   values.email = text(req.body.email);
   if (values.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
     errors.email = "Format email tidak valid.";

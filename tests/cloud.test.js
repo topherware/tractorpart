@@ -380,7 +380,7 @@ test("Failed database write and failed Storage preserve old content and clean ne
 test("Contact transactions, dynamic platform links, About and photo-only Gallery reach public pages", async () => {
   const contact = {
     whatsapp: "081234567890",
-    phone: "",
+    phones: JSON.stringify(['02112345678', '081355667788']),
     email: "owner@example.test",
     address: "Alamat cloud",
     opening_hours: "Senin Sabtu",
@@ -394,6 +394,13 @@ test("Contact transactions, dynamic platform links, About and photo-only Gallery
     200,
   );
   assert.match(await (await fetch(base + "/contact")).text(), /Tokopedia/);
+  assert.equal((await one('SELECT phone FROM contact_content WHERE id=1')).phone, '622112345678\n6281355667788');
+  const publicContact = (await (await fetch(base + '/api/content')).json()).contact;
+  assert.deepEqual(publicContact.phones, ['622112345678', '6281355667788']);
+  const homeContact = await (await fetch(base + '/')).text();
+  assert.match(homeContact, /href="tel:\+622112345678"/);
+  assert.match(homeContact, /href="tel:\+6281355667788"/);
+  assert.match(homeContact, /https:\/\/wa.me\/6281234567890\?/);
   assert.equal(
     (
       await admin.mutate("/api/admin/contact", "PUT", {

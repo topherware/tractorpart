@@ -1,4 +1,39 @@
-<form class="panel contact-editor" data-api-form data-dirty action="/api/admin/contact" data-method="PUT"><div class="form-feedback" role="alert" hidden></div><h2>Informasi kontak</h2><p class="panel-description">Data ini tampil di halaman utama dan footer. WhatsApp utama menjadi tujuan semua tombol Hubungi Kami dan Cek Ketersediaan.</p><div class="form-row"><% for(const[key,label,type,required]of[['whatsapp','WhatsApp utama','tel',true],['phone','Telepon','tel',false],['email','Email','email',false]]){ %><div class="field"><label for="<%= key %>"><%= label %><%= required?' *':'' %></label><input id="<%= key %>" name="<%= key %>" type="<%= type %>" value="<%= contact[key] %>" <%= required?'required':'' %> maxlength="150"><span class="field-error" data-error="<%= key %>"></span><% if(type==='tel'){ %><small>Format 08, 62, atau +62.</small><% } %></div><% } %></div><div class="form-row"><% for(const[key,label,max]of[['address','Alamat toko',1000],['opening_hours','Jam operasional',500]]){ %><div class="field"><label for="<%= key %>"><%= label %> *</label><textarea id="<%= key %>" name="<%= key %>" rows="4" required maxlength="<%= max %>"><%= contact[key] %></textarea><span class="field-error" data-error="<%= key %>"></span></div><% } %></div><h2>Lokasi & tautan toko</h2><div class="field"><label for="maps_url">Tautan lokasi Maps</label><input type="url" id="maps_url" name="maps_url" value="<%= contact.maps_url %>" placeholder="https://..." maxlength="2048"><span class="field-error" data-error="maps_url"></span></div>
-<h2>Platform & media sosial</h2><p class="panel-description">Tambahkan Tokopedia, Shopee, Instagram, atau platform lain. Isi nama dan URL HTTPS.</p>
-<div data-contact-links><input type="hidden" name="links" value="<%= JSON.stringify(contact.links) %>" data-links-value><div data-link-rows></div><button class="button" type="button" data-add-link>+ Tambah Tautan</button><span class="field-error" data-error="links"></span></div>
-<div class="contact-save-actions"><button class="button primary" type="submit">Simpan Perubahan</button></div></form>
+<form class="panel contact-editor" data-api-form data-dirty action="/api/admin/contact" data-method="PUT">
+  <div class="form-feedback" role="alert" hidden></div>
+  <h2>Informasi kontak</h2>
+  <p class="panel-description">Data ini tampil di halaman utama dan footer. WhatsApp utama menjadi tujuan semua tombol Hubungi Kami dan Cek Ketersediaan.</p>
+  <div class="form-row contact-main-fields">
+    <div class="field">
+      <label for="whatsapp">WhatsApp utama *</label>
+      <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" value="<%= contact.whatsapp %>" required maxlength="30" aria-describedby="whatsapp-hint">
+      <small id="whatsapp-hint">Nomor ini menjadi tujuan tombol Hubungi Kami dan Cek Ketersediaan. Format 08, 62, atau +62.</small>
+      <span class="field-error" data-error="whatsapp"></span>
+    </div>
+    <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" value="<%= contact.email %>" maxlength="150"><span class="field-error" data-error="email"></span></div>
+  </div>
+  <div class="contact-phones" data-contact-phones>
+    <h2>Nomor telepon</h2>
+    <p class="panel-description" id="phones-hint">Tambahkan nomor telepon lain untuk ditampilkan di website. Tujuan tombol WhatsApp tetap memakai WhatsApp utama.</p>
+    <input type="hidden" name="phones" value="<%= JSON.stringify(contact.phones) %>" data-phones-value>
+    <div data-phone-rows>
+      <% (contact.phones.length ? contact.phones : ['']).forEach((phone,index)=>{ %>
+        <div class="contact-phone-row">
+          <div class="field"><label for="phone-<%= index %>"><%= index===0?'Telepon':'Telepon '+(index+1) %></label><input id="phone-<%= index %>" data-phone-number data-error-input="phones" type="tel" inputmode="tel" maxlength="30" value="<%= phone %>" aria-describedby="phones-hint" <%= index>0?'required':'' %>></div>
+          <button class="button" type="button" data-remove-phone>Hapus Nomor</button>
+        </div>
+      <% }); %>
+    </div>
+    <button class="button" type="button" data-add-phone><%- include('icon',{name:'plus'}) %><span>Tambah Nomor Telepon</span></button>
+    <span class="field-error" data-error="phones"></span>
+  </div>
+  <div class="form-row">
+    <% for(const[key,label,max]of[['address','Alamat toko',1000],['opening_hours','Jam operasional',500]]){ %>
+      <div class="field"><label for="<%= key %>"><%= label %> *</label><textarea id="<%= key %>" name="<%= key %>" rows="4" required maxlength="<%= max %>"><%= contact[key] %></textarea><span class="field-error" data-error="<%= key %>"></span></div>
+    <% } %>
+  </div>
+  <h2>Lokasi & tautan toko</h2>
+  <div class="field"><label for="maps_url">Tautan lokasi Maps</label><input type="url" id="maps_url" name="maps_url" value="<%= contact.maps_url %>" placeholder="https://..." maxlength="2048"><span class="field-error" data-error="maps_url"></span></div>
+  <h2>Platform & media sosial</h2><p class="panel-description">Tambahkan Tokopedia, Shopee, Instagram, atau platform lain. Isi nama dan URL HTTPS.</p>
+  <div data-contact-links><input type="hidden" name="links" value="<%= JSON.stringify(contact.links) %>" data-links-value><div data-link-rows></div><button class="button" type="button" data-add-link>+ Tambah Tautan</button><span class="field-error" data-error="links"></span></div>
+  <div class="contact-save-actions"><button class="button primary" type="submit">Simpan Perubahan</button></div>
+</form>

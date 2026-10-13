@@ -108,3 +108,25 @@ test('Home holds complete contact information and all contact actions use the ad
   const redirect=await fetch(base+'/contact',{redirect:'manual'});assert.equal(redirect.status,301);assert.equal(redirect.headers.get('location'),'/#kontak');
   assert.doesNotMatch(await(await fetch(base+'/sitemap.xml')).text(),/<loc>[^<]*\/contact<\/loc>/);
 });
+
+test('Multiple phone numbers persist, validate, and never change the primary WhatsApp destination',async()=>{
+  const values={whatsapp:'081211111111',phones:JSON.stringify(['02112345678','+62 813-5566-7788']),email:'',address:'Toko dengan beberapa telepon',opening_hours:'Senin - Sabtu',maps_url:'',links:'[]'};
+  assert.equal((await admin.mutate('/api/admin/contact','PUT',values)).r.status,200);
+  const expected=['622112345678','6281355667788'];
+  assert.equal(one('SELECT phone FROM contact_content WHERE id=1').phone,expected.join('\n'));
+  const content=await(await fetch(base+'/api/content')).json();assert.deepEqual(content.contact.phones,expected);assert.equal(content.contact.phone,expected[0]);
+  const html=await(await fetch(base+'/')).text();
+  for(const phone of expected)assert.equal((html.match(new RegExp('href="tel:\\+'+phone+'"','g'))||[]).length,2);
+  for(const match of html.matchAll(/href="https:\/\/wa.me\/([^?]+)\?/g))assert.equal(match[1],'6281211111111');
+  const stored=one('SELECT * FROM contact_content WHERE id=1');
+  for(const phones of ['{invalid}',JSON.stringify({number:'081234567890'}),JSON.stringify(['bad']),JSON.stringify(['081355667788','+62 81355667788']),JSON.stringify(Array(21).fill('081355667788')),JSON.stringify([null])]){
+    const result=await admin.mutate('/api/admin/contact','PUT',{...values,phones});assert.equal(result.r.status,422);assert.ok(result.data.errors.phones);
+    assert.deepEqual(one('SELECT * FROM contact_content WHERE id=1'),stored);
+  }
+  const restarted=spawnSync(process.execPath,['--input-type=module','-e',"import {one,db} from './lib/db.js'; console.log(JSON.stringify(one('SELECT phone FROM contact_content WHERE id=1'))); db.close();"],{env:process.env,encoding:'utf8'});
+  assert.equal(restarted.status,0);assert.equal(JSON.parse(restarted.stdout).phone,expected.join('\n'));
+  assert.equal((await admin.mutate('/api/admin/contact','PUT',{...values,phones:'[]'})).r.status,200);
+  assert.equal(one('SELECT phone FROM contact_content WHERE id=1').phone,'');
+  assert.deepEqual((await(await fetch(base+'/api/content')).json()).contact.phones,[]);
+  assert.match(await(await fetch(base+'/')).text(),/https:\/\/wa.me\/6281211111111\?/);
+});

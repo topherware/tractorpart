@@ -39,6 +39,10 @@
     'Atur foto dan pilih Gunakan Foto sebelum menyimpan.':'Adjust the photo and choose Use Photo before saving.',
     'Informasi kontak':'Contact information','Data ini tampil di halaman utama dan footer. WhatsApp utama menjadi tujuan semua tombol Hubungi Kami dan Cek Ketersediaan.':'Shown on the homepage and footer. The primary WhatsApp number receives all Contact Us and Check Availability requests.',
     'WhatsApp utama':'Primary WhatsApp','Telepon':'Phone','Format 08, 62, atau +62.':'Use 08, 62, or +62.','Alamat toko':'Store address','Jam operasional':'Opening hours',
+    'Nomor telepon':'Phone numbers','Tambah Nomor Telepon':'Add Phone Number','Hapus Nomor':'Remove Number',
+    'Nomor ini menjadi tujuan tombol Hubungi Kami dan Cek Ketersediaan. Format 08, 62, atau +62.':'This number receives requests from the Contact Us and Check Availability buttons. Use 08, 62, or +62.',
+    'Tambahkan nomor telepon lain untuk ditampilkan di website. Tujuan tombol WhatsApp tetap memakai WhatsApp utama.':'Add other phone numbers to display on the website. WhatsApp buttons still use the primary WhatsApp number.',
+    'Isi nomor telepon Indonesia yang valid dan berbeda. Maksimal 20 nomor.':'Enter distinct valid Indonesian phone numbers. Maximum 20 numbers.',
     'Lokasi & tautan toko':'Location & store links','Tautan lokasi Maps':'Maps URL','Platform & media sosial':'Platforms & social media',
     'Tambahkan Tokopedia, Shopee, Instagram, atau platform lain. Isi nama dan URL HTTPS.':'Add Tokopedia, Shopee, Instagram, or another platform. Enter its name and HTTPS URL.',
     '+ Tambah Tautan':'+ Add Link','Nama platform':'Platform name','URL tautan':'Link URL','Contoh: Tokopedia':'Example: Tokopedia','Hapus Tautan':'Remove Link',
@@ -51,7 +55,7 @@
   let language='id';try{language=localStorage.getItem('tractorpart-admin-language')==='en'?'en':'id';}catch{}
   const originalTitle=document.title;
   const originals=new WeakMap();const attributes=new WeakMap();
-  const translate=value=>language==='en'?(messages[value]||value.replace(/^(\d+) produk terkait$/, '$1 related products')):value;
+  const translate=value=>language==='en'?(messages[value]||value.replace(/^(\d+) produk terkait$/, '$1 related products').replace(/^Telepon (\d+)$/, 'Phone $1')):value;
   function refresh() {
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
     for(let node;node=walker.nextNode();) {

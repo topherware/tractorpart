@@ -62,7 +62,7 @@ Database Supabase baru berisi placeholder profil/kontak, tanpa produk dummy. Sem
 - Kategori: tambah/ubah/hapus; kategori yang masih dipakai produk tidak dapat dihapus.
 - Tentang toko: ringkasan dan deskripsi tampil pada Home.
 - Galeri: upload foto saja, ubah foto, urutkan, sembunyikan/terbitkan atau hapus.
-- Kontak: WhatsApp, telepon, email, alamat, jam, Maps dan daftar fleksibel nama platform + URL HTTPS, misalnya Tokopedia/Shopee.
+- Kontak: satu WhatsApp utama untuk tombol Hubungi Kami/Cek Ketersediaan, beberapa nomor telepon dengan tombol plus dan hapus, email, alamat, jam, Maps dan tautan platform. Nomor telepon tambahan tampil di Home/footer. Data lama tetap terbaca; tidak perlu migrasi Supabase.
 - Bahasa antarmuka admin/publik: ID/EN; konten yang diinput admin tetap sesuai input.
 
 Foto asli maksimal 5 MB. Browser mengoptimalkan foto besar sebelum upload untuk memenuhi batas request Vercel 4,5 MB. Server tetap memvalidasi dan mengubah foto ke WebP maksimal 1.400 px.
@@ -77,6 +77,7 @@ npm test
 npm run test:cloud
 npm run test:browser
 npm run test:catalog
+npm run test:contact
 npm run test:upload
 npm run test:crop
 ```

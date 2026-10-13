@@ -149,6 +149,8 @@ Jangan memasukkan `ADMIN_PASSWORD`, `ADMIN_EMAIL`, `DATA_DIR`, atau `BACKUP_DIR`
 
 Foto asli maksimal **5 MB**. Untuk upload browser di atas 3 MB, aplikasi mengecilkan foto menjadi WebP (atau JPEG bila browser tidak mendukung ekspor WebP) sebelum mengirim, sehingga multipart berada di bawah batas request Vercel 4,5 MB. Server tetap memeriksa foto sebelum menyimpan. Klien API eksternal harus mengirim multipart di bawah batas Vercel juga.
 
+Di **Admin / Kontak**, gunakan **Tambah Nomor Telepon** untuk menambah nomor dan **Hapus Nomor** untuk menghapusnya, lalu **Simpan Perubahan**. Nomor tambahan tampil di Home dan footer. Field **WhatsApp utama** tetap satu nomor dan menjadi tujuan semua tombol Hubungi Kami/Cek Ketersediaan. Pembaruan ini tidak memerlukan migrasi Supabase; nomor yang sudah tersimpan tetap terbaca.
+
 Foto produk dan galeri membuka editor **Atur Foto** setelah dipilih. Geser untuk mengatur posisi, gunakan slider zoom, scroll mouse, tombol panah/+/−, atau gesture pinch dua jari di mobile. **Isi Bingkai** memenuhi kotak persegi; **Foto Utuh** menampilkan seluruh foto dengan ruang putih bila proporsi berbeda. Tekan **Gunakan Foto**, lalu simpan form agar foto diunggah. Tombol **Atur Foto** di samping input membuka kembali foto asli untuk mengubah crop selama halaman belum ditinggalkan. **Batal** atau Escape mempertahankan crop yang terakhir disetujui. Foto yang disimpan berbentuk persegi, maksimal 1.400 px per sisi, tanpa memperbesar sumber kecil. Foto toko pada halaman Tentang tetap menggunakan upload biasa.
 
 ## 8. Backup dan perawatan

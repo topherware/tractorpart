@@ -18,7 +18,7 @@ let toastTimer;function toast(message,error=false){const el=document.getElementB
 async function api(url,method='POST',body){const multipart=body instanceof FormData;let response;try{response=await fetch(url,{method,headers:{'X-CSRF-Token':csrf(),...(!multipart?{'Content-Type':'application/json'}:{})},body:body?(multipart?body:JSON.stringify(body)):undefined});}catch{const e=new Error('Koneksi gagal. Input tetap tersedia. Periksa jaringan dan coba lagi.');e.network=true;throw e;}let data;try{data=await response.json();}catch{data={error:'Server belum dapat memproses permintaan. Coba lagi.'};}if(!response.ok){const e=new Error(data.error||'Permintaan gagal. Coba lagi.');e.errors=data.errors;e.status=response.status;throw e;}return data;}
 function clearErrors(form){form.querySelectorAll('[data-error]').forEach(e=>e.textContent='');form.querySelectorAll('.invalid').forEach(e=>{e.classList.remove('invalid');e.removeAttribute('aria-invalid');e.removeAttribute('aria-describedby');});const f=form.querySelector('.form-feedback');if(f){f.hidden=true;f.classList.remove('success');}}
 function formError(form,error){const feedback=form.querySelector('.form-feedback');if(feedback){feedback.textContent=adminText(error.message);feedback.hidden=false;if(error.network||error.status>=500){const retry=document.createElement('button');retry.type='button';retry.textContent='Coba Lagi';retry.addEventListener('click',()=>form.requestSubmit(form.lastSubmitter));feedback.append(retry);}}
-  let first;for(const[key,message]of Object.entries(error.errors||{})){const el=form.querySelector(`[data-error="${key}"]`);const input=form.elements.namedItem(key);if(el){el.textContent=message;el.id=el.id||`error-${key}-${Math.random().toString(36).slice(2)}`;}if(input){input.classList.add('invalid');input.setAttribute('aria-invalid','true');if(el)input.setAttribute('aria-describedby',el.id);first=first||input;}}if(first)first.focus();else feedback?.scrollIntoView({block:'center',behavior:document.body.matches('.admin-body,.login-body')||matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
+  let first;for(const[key,message]of Object.entries(error.errors||{})){const el=form.querySelector(`[data-error="${key}"]`);const input=form.querySelector(`[data-error-input="${key}"]`)||form.elements.namedItem(key);if(el){el.textContent=message;el.id=el.id||`error-${key}-${Math.random().toString(36).slice(2)}`;}if(input){input.classList.add('invalid');input.setAttribute('aria-invalid','true');if(el)input.setAttribute('aria-describedby',el.id);first=first||input;}}if(first)first.focus();else feedback?.scrollIntoView({block:'center',behavior:document.body.matches('.admin-body,.login-body')||matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});
   if(error.status===401&&form.action.includes('/api/admin/')){const link=document.createElement('a');link.href='/admin/login';link.target='_blank';link.rel='noopener';link.textContent='Login kembali di tab baru, lalu muat ulang setelah menyalin perubahan Anda.';feedback?.append(document.createElement('br'),link);}}
 const dirtyForms=new Set();document.querySelectorAll('[data-dirty]').forEach(form=>{form.addEventListener('input',()=>dirtyForms.add(form));form.addEventListener('change',()=>dirtyForms.add(form));});
 window.addEventListener('beforeunload',e=>{if(dirtyForms.size){e.preventDefault();e.returnValue='';}});
@@ -41,6 +41,38 @@ const galleryItems=[...document.querySelectorAll('[data-gallery]')],lightbox=doc
 function showPhoto(index){photoIndex=(index+galleryItems.length)%galleryItems.length;const item=galleryItems[photoIndex],image=document.getElementById('lightbox-image');image.src=item.dataset.src;image.alt=item.dataset.alt;document.getElementById('lightbox-counter').textContent=`${photoIndex+1} / ${galleryItems.length}`;if(lightbox.open)motion?.swapPhoto(lightbox.querySelector('figure'));}
 galleryItems.forEach((item,i)=>item.addEventListener('click',()=>{opener=item;showPhoto(i);openDialog(lightbox);}));
 document.querySelector('[data-lightbox-close]')?.addEventListener('click',()=>closeDialog(lightbox));document.querySelector('[data-lightbox-prev]')?.addEventListener('click',()=>showPhoto(photoIndex-1));document.querySelector('[data-lightbox-next]')?.addEventListener('click',()=>showPhoto(photoIndex+1));lightbox?.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();showPhoto(photoIndex+1);}if(e.key==='ArrowLeft'){e.preventDefault();showPhoto(photoIndex-1);}});lightbox?.addEventListener('close',()=>opener?.focus());
+
+// Phone rows share the contact save operation; WhatsApp keeps a single target.
+(() => {
+ const root=document.querySelector('[data-contact-phones]');if(!root)return;
+ const rows=root.querySelector('[data-phone-rows]'),hidden=root.querySelector('[data-phones-value]'),addButton=root.querySelector('[data-add-phone]');
+ let index=rows.children.length;
+ const sync=()=>{hidden.value=JSON.stringify([...rows.querySelectorAll('[data-phone-number]')].map(input=>input.value.trim()).filter(Boolean));};
+ const changed=()=>{sync();root.dispatchEvent(new Event('input',{bubbles:true}));};
+ function renumber(){
+  [...rows.children].forEach((row,i)=>{
+   row.querySelector('label').textContent=i===0?'Telepon':'Telepon '+(i+1);
+   row.querySelector('input').required=i>0;
+  });
+  addButton.disabled=rows.children.length>=20;
+  window.TractorPartAdminI18n?.refresh();
+ }
+ function connect(row){
+  row.addEventListener('input',sync);
+  row.querySelector('[data-remove-phone]').addEventListener('click',()=>{
+   if(rows.children.length===1)row.querySelector('input').value='';else row.remove();
+   renumber();changed();(rows.querySelector('input')||addButton).focus();
+  });
+ }
+ [...rows.children].forEach(connect);
+ addButton.addEventListener('click',()=>{
+  if(rows.children.length>=20)return;
+  const row=document.createElement('div');row.className='contact-phone-row';const id='phone-'+index++;
+  row.innerHTML='<div class="field"><label for="'+id+'">Telepon</label><input id="'+id+'" data-phone-number data-error-input="phones" type="tel" inputmode="tel" maxlength="30" aria-describedby="phones-hint"></div><button class="button" type="button" data-remove-phone>Hapus Nomor</button>';
+  rows.append(row);connect(row);renumber();changed();row.querySelector('input').focus();
+ });
+ renumber();sync();
+})();
 
 // Flexible store links are serialized into the existing contact save operation.
 (() => {
